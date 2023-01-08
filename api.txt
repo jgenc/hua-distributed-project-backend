@@ -36,6 +36,22 @@ declaration = {
 ### Συμβολαιογράφος
 
 GET baseurl/declaration : {loginid} : [... {... , status: pending | completed}]
+ ok + check user authorization
+ {
+     "purchaserTin=": "111111112",
+     "propertyDescription=": "ssas111",
+     "sellerAcceptance": false,
+     "notaryTin": "111111112",
+     "sellerTin=": "111111111",
+     "tax": 11.12,
+     "paymentMethod=": "",
+     "purchaserAcceptance": false,
+     "id": 1,
+     "contractDetails": "",
+     "propertyCategory": "a111",
+     "status": "pending",
+     "propertyNumber": "111"
+ }
 
 POST baseUrl/declaration : {...} : STATUS CODE
   { "notaryTin" : "111111112",

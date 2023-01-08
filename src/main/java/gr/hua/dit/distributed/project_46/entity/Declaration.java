@@ -1,9 +1,15 @@
 package gr.hua.dit.distributed.project_46.entity;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import net.bytebuddy.implementation.bind.annotation.Default;
+import net.minidev.json.JSONObject;
+import org.springframework.core.serializer.Serializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "declarations")
@@ -192,4 +198,23 @@ public class Declaration {
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
-}
+
+    public JSONObject toJSON() {
+        JSONObject jo = new JSONObject();
+        jo.put("id", id);
+        jo.put("status", status);
+        jo.put("notaryTin", notaryTin);
+        jo.put("propertyNumber", propertyNumber);
+        jo.put("propertyCategory", propertyCategory);
+        jo.put("propertyDescription=", propertyDescription);
+        jo.put("sellerTin=", sellerTin);
+        jo.put("purchaserTin=", purchaserTin);
+        jo.put("tax", tax);
+        jo.put("sellerAcceptance", sellerAcceptance);
+        jo.put("purchaserAcceptance", purchaserAcceptance);
+        jo.put("contractDetails", contractDetails);
+        jo.put("paymentMethod=", paymentMethod );
+        return jo;
+    }
+
+ }
