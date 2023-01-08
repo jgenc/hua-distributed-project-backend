@@ -1,0 +1,105 @@
+# API
+
+$baseUrl = http://localhost:3000/api
+
+declaration = {
+	id,
+	status: pending | completed,
+	afm_symbolaiografou, notaryTin
+	{
+		id_akinhto, propertyNumber
+		kathgoria, propertyCategory
+		perigrafh, propertyDescription
+		afm_idioktiti  ?
+	},
+	afm_seller, sellerTin 
+	afm_buyer, purchaserTin
+	{
+		// ?
+		calculation_sheet    tax
+	},
+	status_seller, sellerAcceptance
+	status_buyer, purchaserAcceptance
+	{
+		taytothta_ofeilhs
+	},
+	{
+		contract ... contractDetails - paymentMethod
+	}	
+}
+
+## Login
+
+   POST baseUrl/login : {username, password} : STATUS CODE
+   ----- baseUrl/auth/login 
+
+### Συμβολαιογράφος
+
+GET baseurl/declaration : {loginid} : [... {... , status: pending | completed}]
+
+POST baseUrl/declaration : {...} : STATUS CODE
+  { "notaryTin" : "111111112",
+   "propertyNumber" : "111",
+   "propertyCategory" : "a111",
+   "propertyDescription" : "ssas111",
+   "sellerTin" : "111111111",
+   "purchaserTin" : "111111112",
+   "tax" : "11.12" }
+
+
+POST baseUrl/declaration/:id/contract : { contract } : STATUS CODE
+	- θα πρέπει να έχει πληρωθεί ο φόρος και να έχει γίνει υποβολή από αγοραστή και από πωλητή
+	- declaration/:id SET { status: completed }
+
+### Αγοραστή
+
+GET baseurl/declaration : {loginid} : [... {... , status: pending | completed}]
+
+POST baseUrl/declaration/:id/buyerAccept : { boolean } : STATUS CODE
+
+POST baseUrl/declaration/:id/pay : { boolean } : STATUS CODE
+
+### Πωλητής
+
+GET baseurl/declaration : {loginid} : [... {... , status: pending | completed}]
+
+POST baseUrl/declaration/:id/sellerAccept : { boolean } : STATUS CODE
+
+## Administration
+
+   $adminUrl = http://localhost:8080/admin
+
+   ### Users
+
+      GET $adminUrl/user/:id ----> user data
+
+      GET $adminUrl/user/ ----> all users 
+
+
+      POST $adminUrl/user : {user} : STATUS CODE        
+      ----- {"username":"ade2811fsss", "tin":"s9es2ffs1", "password":"111111","role":"notary"}
+      ----- {"username":"ade211fsss", "tin":"s9es2ffs2", "password":"111111"}
+      
+      PUT $adminUrl/user/:id : {modifiedUser} : STATUS CODE  
+      ----- Done!!!  no password
+      ----- {"username":"ade2811fsss", "tin":"s9es2ffs1", "role":"notary"}
+      ----- {"username":"ade211fsss", "tin":"s9es2ffs2"}
+
+
+      POST $adminUrl/user/:id : {modifiedPassword} : STATUS CODE  
+      ----- Done!!! 
+      ----- {"password":"111111"}
+
+      DELETE $adminUrl/user/:id : {} : STATUS CODE
+      ----- Done!!!
+
+
+### Roles
+
+POST $adminUrl/role : {role} : STATUS CODE
+DELETE $adminUrl/role : {} : STATUS CODE
+
+### Services
+
+POST $adminUrl/service : {service} : STATUS CODE
+POST $adminUrl/service: {} : STATUS CODE
