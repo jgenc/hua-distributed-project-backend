@@ -34,7 +34,7 @@ public class AddDeclarationRequest {
 
     private Float tax;
 
-     public String getNotaryTin() {
+    public String getNotaryTin() {
         return notaryTin;
     }
 

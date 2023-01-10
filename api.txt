@@ -67,19 +67,33 @@ POST baseUrl/declaration/:id/contract : { contract } : STATUS CODE
 	- θα πρέπει να έχει πληρωθεί ο φόρος και να έχει γίνει υποβολή από αγοραστή και από πωλητή
 	- declaration/:id SET { status: completed }
 
+
+	@PostMapping("/declaration/complete")
+	   "id" : 1,
+       "contractDetails" : "111/11-11-2011",
+       "paymentMethod" : "Cash"
+
 ### Αγοραστή
 
 GET baseurl/declaration : {loginid} : [... {... , status: pending | completed}]
 
 POST baseUrl/declaration/:id/buyerAccept : { boolean } : STATUS CODE
+@GetMapping("/declaration/accept/{id}")
 
-POST baseUrl/declaration/:id/pay : { boolean } : STATUS CODE
+
+call only for acceptance
+
+POST baseUrl/declaration/:id/pay : { boolean } : STATUS CODE   ------------
+
 
 ### Πωλητής
 
 GET baseurl/declaration : {loginid} : [... {... , status: pending | completed}]
 
 POST baseUrl/declaration/:id/sellerAccept : { boolean } : STATUS CODE
+ call only for acceptance
+ @GetMapping("/declaration/accept/{id}")
+
 
 ## Administration
 

@@ -1,9 +1,11 @@
 package gr.hua.dit.distributed.project_46.entity;
 
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(	name = "persons")
@@ -34,6 +36,15 @@ public class Person  {
     @Size(max = 30, message = "D.O.Y. should not be greater than 30 characters")
     private String doy;
 
+    @OneToMany(mappedBy = "notary", cascade = CascadeType.ALL)
+    private Set<Declaration> notaryDeclarations;
+
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    private Set<Declaration> sellerDeclarations;
+
+    @OneToMany(mappedBy = "purchaser", cascade = CascadeType.ALL)
+    private Set<Declaration> purchaserDeclarations;
+
     public Person() {
     }
 
@@ -49,9 +60,7 @@ public class Person  {
         return tin;
     }
 
-    public void setTin(String tin) {
-        this.tin = tin;
-    }
+    public void setTin(String tin) { this.tin = tin; }
 
     public String getFirstName() {
         return firstName;
@@ -83,6 +92,14 @@ public class Person  {
 
     public void setDoy(String doy) {
         this.doy = doy;
+    }
+
+    public Set<Declaration> getNotaryDeclarations() {
+        return notaryDeclarations;
+    }
+
+    public void setNotaryDeclarations(Set<Declaration> notaryDeclarations) {
+        this.notaryDeclarations = notaryDeclarations;
     }
 
     @Override

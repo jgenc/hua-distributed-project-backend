@@ -22,9 +22,9 @@ public class Declaration {
     @Column(name = "status")
     private EStatus status;
 
-    @Column(name = "notarytin", length = 9)
-    @NotBlank
-    private String notaryTin;
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "notarytin", referencedColumnName = "tin")
+    private Person notary;
 
     @Column(name = "propertynumber", length = 15)
     @NotBlank
@@ -38,13 +38,13 @@ public class Declaration {
     @NotBlank
     private String propertyDescription;
 
-    @Column(name = "sellertin", length = 9)
-    @NotBlank
-    private String sellerTin;
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "sellertin", referencedColumnName = "tin")
+    private Person seller;
 
-    @Column(name = "purchasertin", length = 9)
-    @NotBlank
-    private String purchaserTin;
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "purchaserTin", referencedColumnName = "tin")
+    private Person purchaser;
 
     @Column(name = "tax")
     private Float tax;
@@ -65,34 +65,34 @@ public class Declaration {
     public Declaration() {
     }
 
-    public Declaration(String notaryTin, String propertyNumber, String propertyCategory, String propertyDescription, String sellerTin, String purchaserTin, Float tax) {
+    public Declaration(String propertyNumber, String propertyCategory, String propertyDescription, Float tax) {
         this.status=EStatus.pending;
-        this.notaryTin = notaryTin;
         this.propertyNumber = propertyNumber;
         this.propertyCategory = propertyCategory;
         this.propertyDescription = propertyDescription;
-        this.sellerTin = sellerTin;
-        this.purchaserTin = purchaserTin;
         this.tax = tax;
         this.sellerAcceptance = false;
         this.purchaserAcceptance = false;
         this.contractDetails = "";
         this.paymentMethod = "";
+        this.notary=null;
+        this.seller=null;
+        this.purchaser=null;
     }
 
-    public Declaration(EStatus status, String notaryTin, String propertyNumber, String propertyCategory, String propertyDescription, String sellerTin, String purchaserTin, Float tax, Boolean sellerAcceptance, Boolean purchaserAcceptance, String contractDetails, String paymentMethod) {
+    public Declaration(EStatus status, String propertyNumber, String propertyCategory, String propertyDescription, Float tax, Boolean sellerAcceptance, Boolean purchaserAcceptance, String contractDetails, String paymentMethod) {
         this.status = status;
-        this.notaryTin = notaryTin;
         this.propertyNumber = propertyNumber;
         this.propertyCategory = propertyCategory;
         this.propertyDescription = propertyDescription;
-        this.sellerTin = sellerTin;
-        this.purchaserTin = purchaserTin;
         this.tax = tax;
         this.sellerAcceptance = sellerAcceptance;
         this.purchaserAcceptance = purchaserAcceptance;
         this.contractDetails = contractDetails;
         this.paymentMethod = paymentMethod;
+        this.notary=null;
+        this.seller=null;
+        this.purchaser=null;
     }
 
     public Long getId() {
@@ -109,14 +109,6 @@ public class Declaration {
 
     public void setStatus(EStatus status) {
         this.status = status;
-    }
-
-    public String getNotaryTin() {
-        return notaryTin;
-    }
-
-    public void setNotaryTin(String notaryTin) {
-        this.notaryTin = notaryTin;
     }
 
     public String getPropertyNumber() {
@@ -141,22 +133,6 @@ public class Declaration {
 
     public void setPropertyDescription(String propertyDescription) {
         this.propertyDescription = propertyDescription;
-    }
-
-    public String getSellerTin() {
-        return sellerTin;
-    }
-
-    public void setSellerTin(String sellerTin) {
-        this.sellerTin = sellerTin;
-    }
-
-    public String getPurchaserTin() {
-        return purchaserTin;
-    }
-
-    public void setPurchaserTin(String purchaserTin) {
-        this.purchaserTin = purchaserTin;
     }
 
     public Float getTax() {
@@ -199,16 +175,40 @@ public class Declaration {
         this.paymentMethod = paymentMethod;
     }
 
+    public Person getNotary() {
+        return notary;
+    }
+
+    public void setNotary(Person notary) {
+        this.notary = notary;
+    }
+
+    public Person getSeller() {
+        return seller;
+    }
+
+    public void setSeller(Person seller) {
+        this.seller = seller;
+    }
+
+    public Person getPurchaser() {
+        return purchaser;
+    }
+
+    public void setPurchaser(Person purchaser) {
+        this.purchaser = purchaser;
+    }
+
     public JSONObject toJSON() {
         JSONObject jo = new JSONObject();
         jo.put("id", id);
         jo.put("status", status);
-        jo.put("notaryTin", notaryTin);
+        jo.put("notaryTin", notary.getTin());
         jo.put("propertyNumber", propertyNumber);
         jo.put("propertyCategory", propertyCategory);
         jo.put("propertyDescription=", propertyDescription);
-        jo.put("sellerTin=", sellerTin);
-        jo.put("purchaserTin=", purchaserTin);
+        jo.put("sellerTin=", seller.getTin());
+        jo.put("purchaserTin=", purchaser.getTin());
         jo.put("tax", tax);
         jo.put("sellerAcceptance", sellerAcceptance);
         jo.put("purchaserAcceptance", purchaserAcceptance);

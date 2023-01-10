@@ -1,12 +1,10 @@
 package gr.hua.dit.distributed.project_46.controller;
 
 import gr.hua.dit.distributed.project_46.config.JwtUtils;
-import gr.hua.dit.distributed.project_46.entity.ERole;
-import gr.hua.dit.distributed.project_46.entity.Person;
-import gr.hua.dit.distributed.project_46.entity.Role;
-import gr.hua.dit.distributed.project_46.entity.User;
+import gr.hua.dit.distributed.project_46.entity.*;
 import gr.hua.dit.distributed.project_46.payload.request.SignupRequest;
 import gr.hua.dit.distributed.project_46.payload.response.MessageResponse;
+import gr.hua.dit.distributed.project_46.repository.DeclarationRepository;
 import gr.hua.dit.distributed.project_46.repository.PersonRepository;
 import gr.hua.dit.distributed.project_46.repository.UserRepository;
 import gr.hua.dit.distributed.project_46.service.UserDetailsImpl;
@@ -37,6 +35,8 @@ public class PersonController {
     UserRepository userRepository;
      @Autowired
     JwtUtils jwtUtils;
+    @Autowired
+    private DeclarationRepository declarationRepository;
 
     @GetMapping("/person")
     public ResponseEntity<?> getPersons() {
@@ -139,8 +139,8 @@ public class PersonController {
                         .orElseThrow(() -> new RuntimeException("User Not Found with Taxpayer Identification Number: " + finalUserTin));
                 user.setTin(newPerson.getTin());
                 userRepository.save(user);
+                }
             }
-        }
 
         return ResponseEntity.ok(new MessageResponse("Person modified successfully!"));
     }
