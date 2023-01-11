@@ -5,25 +5,18 @@ import gr.hua.dit.distributed.project_46.entity.ERole;
 import gr.hua.dit.distributed.project_46.entity.Person;
 import gr.hua.dit.distributed.project_46.entity.Role;
 import gr.hua.dit.distributed.project_46.entity.User;
-import gr.hua.dit.distributed.project_46.payload.request.LoginRequest;
 import gr.hua.dit.distributed.project_46.payload.request.SignupRequest;
 import gr.hua.dit.distributed.project_46.payload.request.UpdatePasswordRequest;
 import gr.hua.dit.distributed.project_46.payload.request.UpdateRequest;
-import gr.hua.dit.distributed.project_46.payload.response.JwtResponse;
 import gr.hua.dit.distributed.project_46.payload.response.MessageResponse;
 import gr.hua.dit.distributed.project_46.repository.PersonRepository;
 import gr.hua.dit.distributed.project_46.repository.RoleRepository;
 import gr.hua.dit.distributed.project_46.repository.UserRepository;
 import gr.hua.dit.distributed.project_46.service.UserDetailsImpl;
 import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -58,6 +49,7 @@ public class UserController {
     JwtUtils jwtUtils;
 
     @GetMapping ("/user")
+    /* Get All Users */
     public ResponseEntity<?> getUsers() {
         List<User> users=userRepository.findAll();
         JSONArray jo = new JSONArray();
@@ -68,6 +60,7 @@ public class UserController {
         return ResponseEntity.ok(jo);
     }
     @GetMapping ("/user/{id}")
+    /* Get User with id */
     public ResponseEntity<?> getUser(@PathVariable Long id) {
         if (userRepository.existsById(id)) {
             User user=userRepository.getById(id);
@@ -82,6 +75,7 @@ public class UserController {
 
 
     @PostMapping("/user")
+    /* Create New User */
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
@@ -124,7 +118,8 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    /* Delete User with id */
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         if (userRepository.existsById(id)) {
             User user=userRepository.getById(id);
             if (user.getUsername().equals("admin")) {
@@ -142,6 +137,7 @@ public class UserController {
     }
 
     @PostMapping("/user/{id}")
+    /* Modify user's password with id */
     public ResponseEntity<?> modifyPassword(@PathVariable Long id, @Valid @RequestBody UpdatePasswordRequest updateRequest) {
         if (userRepository.existsById(id)) {
             User user=userRepository.getById(id);
@@ -156,6 +152,7 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
+    /* Modify User with id */
     public ResponseEntity<?> modifyUser(@PathVariable Long id, @Valid @RequestBody UpdateRequest updateRequest) {
         if (userRepository.existsById(id)) {
             User user=userRepository.getById(id);

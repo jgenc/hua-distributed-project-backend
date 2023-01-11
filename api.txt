@@ -92,7 +92,7 @@ GET baseurl/declaration : {loginid} : [... {... , status: pending | completed}]
 
 POST baseUrl/declaration/:id/sellerAccept : { boolean } : STATUS CODE
  call only for acceptance
- @GetMapping("/declaration/accept/{id}")
+ @PostMapping("/declaration/accept/{id}")
 
 
 ## Administration

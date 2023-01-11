@@ -1,10 +1,10 @@
 package gr.hua.dit.distributed.project_46.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.Set;
 
 @Entity
@@ -37,12 +37,15 @@ public class Person  {
     private String doy;
 
     @OneToMany(mappedBy = "notary", cascade = CascadeType.ALL)
+    @JsonBackReference
     private Set<Declaration> notaryDeclarations;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    @JsonBackReference
     private Set<Declaration> sellerDeclarations;
 
     @OneToMany(mappedBy = "purchaser", cascade = CascadeType.ALL)
+    @JsonBackReference
     private Set<Declaration> purchaserDeclarations;
 
     public Person() {
@@ -100,6 +103,22 @@ public class Person  {
 
     public void setNotaryDeclarations(Set<Declaration> notaryDeclarations) {
         this.notaryDeclarations = notaryDeclarations;
+    }
+
+    public Set<Declaration> getSellerDeclarations() {
+        return sellerDeclarations;
+    }
+
+    public void setSellerDeclarations(Set<Declaration> sellerDeclarations) {
+        this.sellerDeclarations = sellerDeclarations;
+    }
+
+    public Set<Declaration> getPurchaserDeclarations() {
+        return purchaserDeclarations;
+    }
+
+    public void setPurchaserDeclarations(Set<Declaration> purchaserDeclarations) {
+        this.purchaserDeclarations = purchaserDeclarations;
     }
 
     @Override

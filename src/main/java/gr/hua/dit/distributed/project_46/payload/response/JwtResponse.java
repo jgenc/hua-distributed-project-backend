@@ -1,9 +1,7 @@
 package gr.hua.dit.distributed.project_46.payload.response;
 
-import gr.hua.dit.distributed.project_46.entity.Role;
 
 import java.util.List;
-import java.util.Set;
 
 public class JwtResponse {
     private String token;

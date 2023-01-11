@@ -1,15 +1,10 @@
 package gr.hua.dit.distributed.project_46.entity;
-import com.fasterxml.jackson.databind.ser.Serializers;
-import net.bytebuddy.implementation.bind.annotation.Default;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import net.minidev.json.JSONObject;
-import org.springframework.core.serializer.Serializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Entity
 @Table(name = "declarations")
@@ -24,6 +19,7 @@ public class Declaration {
 
     @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "notarytin", referencedColumnName = "tin")
+    @JsonManagedReference
     private Person notary;
 
     @Column(name = "propertynumber", length = 15)
@@ -40,10 +36,12 @@ public class Declaration {
 
     @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "sellertin", referencedColumnName = "tin")
+    @JsonManagedReference
     private Person seller;
 
     @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "purchaserTin", referencedColumnName = "tin")
+    @JsonManagedReference
     private Person purchaser;
 
     @Column(name = "tax")

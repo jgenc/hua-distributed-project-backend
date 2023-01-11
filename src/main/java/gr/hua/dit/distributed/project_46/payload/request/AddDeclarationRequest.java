@@ -1,16 +1,10 @@
 package gr.hua.dit.distributed.project_46.payload.request;
 
-import gr.hua.dit.distributed.project_46.entity.ERole;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class AddDeclarationRequest {
-
-    @NotBlank
-    @Size(min = 9, max = 9)
-    private String notaryTin;
 
     @NotBlank
     @Size(min = 1, max = 15)
@@ -34,13 +28,6 @@ public class AddDeclarationRequest {
 
     private Float tax;
 
-    public String getNotaryTin() {
-        return notaryTin;
-    }
-
-    public void setNotaryTin(String notaryTin) {
-        this.notaryTin = notaryTin;
-    }
 
     public String getPropertyNumber() {
         return propertyNumber;
