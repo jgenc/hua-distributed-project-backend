@@ -3,10 +3,10 @@ package gr.hua.dit.distributed.project_46.payload.request;
 import javax.validation.constraints.NotBlank;
 
 public class LoginRequest {
-    @NotBlank
+    @NotBlank(message="Please enter the username")
     private String username;
 
-    @NotBlank
+    @NotBlank(message="Please enter the password")
     private String password;
 
     public String getUsername() {

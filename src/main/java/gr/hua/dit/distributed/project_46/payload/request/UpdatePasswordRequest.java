@@ -4,8 +4,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class UpdatePasswordRequest {
-    @NotBlank
-    @Size(min = 6, max = 40)
+    @NotBlank(message="Please enter the password")
+    @Size(min = 6, max = 40, message = "Password should be between 6 and 40 characters")
     private String password;
 
     public String getPassword() {

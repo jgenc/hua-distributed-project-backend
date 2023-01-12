@@ -6,24 +6,24 @@ import javax.validation.constraints.Size;
 
 public class AddDeclarationRequest {
 
-    @NotBlank
-    @Size(min = 1, max = 15)
+    @NotBlank(message="Please enter the Property Number")
+    @Size(min = 1, max = 15, message = "Property Number should not be greater than 15 characters")
     private String propertyNumber;
 
-    @NotBlank
-    @Size(min = 1, max = 15)
+    @NotBlank(message="Please enter the Property Category")
+    @Size(min = 1, max = 15, message = "Property Category should not be greater than 15 characters")
     private String propertyCategory;
 
-    @NotBlank
-    @Size(min = 3, max = 100)
+    @NotBlank(message="Please enter the Property Description")
+    @Size(min = 3, max = 100, message = "Property Description should not be greater than 100 characters")
     private String propertyDescription;
 
-    @NotBlank
-    @Size(min = 9, max = 9)
+    @NotBlank(message="Please enter the Seller's Taxpayer Identification Number")
+    @Size(min = 9, max = 9, message = "Seller's Taxpayer Identification Number should be 9 characters")
     private String sellerTin;
 
-    @NotBlank
-    @Size(min = 9, max = 9)
+    @NotBlank(message="Please enter the Purchaser's Taxpayer Identification Number")
+    @Size(min = 9, max = 9, message = "Purchaser's Taxpayer Identification Number should be 9 characters")
     private String purchaserTin;
 
     private Float tax;

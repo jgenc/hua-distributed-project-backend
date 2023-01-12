@@ -2,18 +2,16 @@ package gr.hua.dit.distributed.project_46.controller;
 
 import gr.hua.dit.distributed.project_46.config.JwtUtils;
 import gr.hua.dit.distributed.project_46.entity.ERole;
-import gr.hua.dit.distributed.project_46.entity.Person;
 import gr.hua.dit.distributed.project_46.entity.Role;
 import gr.hua.dit.distributed.project_46.entity.User;
 import gr.hua.dit.distributed.project_46.payload.request.SignupRequest;
 import gr.hua.dit.distributed.project_46.payload.request.UpdatePasswordRequest;
 import gr.hua.dit.distributed.project_46.payload.request.UpdateRequest;
 import gr.hua.dit.distributed.project_46.payload.response.MessageResponse;
+import gr.hua.dit.distributed.project_46.payload.response.UserResponse;
 import gr.hua.dit.distributed.project_46.repository.PersonRepository;
 import gr.hua.dit.distributed.project_46.repository.RoleRepository;
 import gr.hua.dit.distributed.project_46.repository.UserRepository;
-import gr.hua.dit.distributed.project_46.service.UserDetailsImpl;
-import net.minidev.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,27 +50,25 @@ public class UserController {
     /* Get All Users */
     public ResponseEntity<?> getUsers() {
         List<User> users=userRepository.findAll();
-        JSONArray jo = new JSONArray();
+        Set<UserResponse> userResponse = new HashSet<>();
         for (User user:users) {
-            UserDetailsImpl userDetails = UserDetailsImpl.build(user);
-            jo.add(userDetails.toJSON());
+            userResponse.add(new UserResponse(user.getId(),user.getUsername(),user.getTin(),user.getRoles()));
         }
-        return ResponseEntity.ok(jo);
+        return ResponseEntity.ok(userResponse);
     }
+
     @GetMapping ("/user/{id}")
     /* Get User with id */
     public ResponseEntity<?> getUser(@PathVariable Long id) {
         if (userRepository.existsById(id)) {
             User user=userRepository.getById(id);
-            UserDetailsImpl userDetails = UserDetailsImpl.build(user);
-            return ResponseEntity.ok(userDetails.toJSON());
+            return ResponseEntity.ok(new UserResponse(user.getId(),user.getUsername(),user.getTin(),user.getRoles()));
         } else {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: User->"+id+" NOT Exists"));
         }
     }
-
 
     @PostMapping("/user")
     /* Create New User */
@@ -189,9 +185,6 @@ public class UserController {
             }
 
             user.setUsername(updateRequest.getUsername());
-            String oldTin= user.getTin();
-            user.setTin(updateRequest.getTin());
-
             String strRoles = updateRequest.getRole();
             Set<Role> roles = new HashSet<>();
 
@@ -210,15 +203,8 @@ public class UserController {
             }
 
             userRepository.save(user);
-
-            if (!(oldTin.equals(updateRequest.getTin()))) {
-                /* update tin of user's person data */
-                if (personRepository.existsByTin(oldTin)) {
-                    Person person = personRepository.findByTin(oldTin)
-                            .orElseThrow(() -> new RuntimeException("User Not Found with Taxpayer Identification Number: " + oldTin));
-                    person.setTin(updateRequest.getTin());
-                    personRepository.save(person);
-                }
+            if (!(user.getTin().equals(updateRequest.getTin()))) {
+                /* update tin of user and user's personal data */
             }
 
         } else {

@@ -57,7 +57,7 @@ public class PersonController {
     }
 
     @PostMapping("/person")
-    /* Add Person Data */
+    /* Add or Modify Person's Data */
     public ResponseEntity<?> addPerson(@Valid @RequestBody PersonRequest personRequest, HttpServletRequest request) {
         String userTin="";
         try {
@@ -68,10 +68,14 @@ public class PersonController {
                     .body(new MessageResponse("Error: Cannot set user authentication: {}"+ e));
         }
 
-        // Create new Person
+        String message="Person added successfully!";
+        if (personRepository.existsByTin(userTin)) {
+            message="Person modified successfully!";
+        }
+            // Create new Person
         Person person = new Person(userTin, personRequest.getFirstName(), personRequest.getLastName(), personRequest.getAddress(), personRequest.getDoy());
         personRepository.save(person);
 
-        return ResponseEntity.ok(new MessageResponse("Person added successfully!"));
+        return ResponseEntity.ok(new MessageResponse(message));
     }
 }

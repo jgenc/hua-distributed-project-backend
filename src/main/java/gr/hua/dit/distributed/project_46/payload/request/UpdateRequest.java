@@ -4,12 +4,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class UpdateRequest {
-    @NotBlank
-    @Size(min = 3, max = 20)
+    @NotBlank(message="Please enter the username")
+    @Size(min = 3, max = 20, message = "Username should be between 3 and 20 characters")
     private String username;
 
-    @NotBlank
-    @Size(min = 9, max = 9)
+    @NotBlank(message="Please enter the Taxpayer Identification Number")
+    @Size(min = 9, max = 9, message = "Taxpayer Identification Number should be 9 characters")
     private String tin;
     private String role;
 

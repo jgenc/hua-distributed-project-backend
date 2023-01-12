@@ -14,7 +14,7 @@ public class Person  {
     @Id
     @Column(name = "tin", length = 9)
     @NotBlank(message="Please enter the Taxpayer Identification Number")
-    @Size(min = 9, max = 9, message = "FTaxpayer Identification Number should be 9 characters")
+    @Size(min = 9, max = 9, message = "Taxpayer Identification Number should be 9 characters")
     private String tin;
 
     @Column(name = "firstname", length = 30)
@@ -36,15 +36,15 @@ public class Person  {
     @Size(max = 30, message = "D.O.Y. should not be greater than 30 characters")
     private String doy;
 
-    @OneToMany(mappedBy = "notary", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "notary", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private Set<Declaration> notaryDeclarations;
 
-    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private Set<Declaration> sellerDeclarations;
 
-    @OneToMany(mappedBy = "purchaser", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "purchaser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private Set<Declaration> purchaserDeclarations;
 

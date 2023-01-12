@@ -1,6 +1,5 @@
 package gr.hua.dit.distributed.project_46.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import net.minidev.json.JSONObject;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -195,24 +194,6 @@ public class Declaration {
 
     public void setPurchaser(Person purchaser) {
         this.purchaser = purchaser;
-    }
-
-    public JSONObject toJSON() {
-        JSONObject jo = new JSONObject();
-        jo.put("id", id);
-        jo.put("status", status);
-        jo.put("notaryTin", notary.getTin());
-        jo.put("propertyNumber", propertyNumber);
-        jo.put("propertyCategory", propertyCategory);
-        jo.put("propertyDescription=", propertyDescription);
-        jo.put("sellerTin=", seller.getTin());
-        jo.put("purchaserTin=", purchaser.getTin());
-        jo.put("tax", tax);
-        jo.put("sellerAcceptance", sellerAcceptance);
-        jo.put("purchaserAcceptance", purchaserAcceptance);
-        jo.put("contractDetails", contractDetails);
-        jo.put("paymentMethod=", paymentMethod );
-        return jo;
     }
 
  }

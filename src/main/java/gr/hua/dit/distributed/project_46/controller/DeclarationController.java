@@ -11,7 +11,6 @@ import gr.hua.dit.distributed.project_46.payload.response.MessageResponse;
 import gr.hua.dit.distributed.project_46.repository.PersonRepository;
 import gr.hua.dit.distributed.project_46.repository.UserRepository;
 import gr.hua.dit.distributed.project_46.repository.DeclarationRepository;
-import net.minidev.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toSet;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -52,12 +54,14 @@ public class DeclarationController {
                     .body(new MessageResponse("Error: Cannot set user authentication: {}" + e));
         }
 
-        List<Declaration> declarations = declarationRepository.findByTin(userTin);
-        JSONArray jo = new JSONArray();
-        for (Declaration declaration : declarations) {
-            jo.add(declaration.toJSON());
-        }
-        return ResponseEntity.ok(jo);
+        String finalUserTin = userTin;
+        Person person = personRepository.findByTin(userTin)
+                .orElseThrow(() -> new RuntimeException("Person Not Found with Taxpayer Identification Number: " + finalUserTin));
+
+        Set<Declaration> allDeclarations = Stream.of(person.getNotaryDeclarations(), person.getPurchaserDeclarations(),person.getSellerDeclarations())
+                .flatMap(Set::stream)
+                .collect(toSet());
+        return ResponseEntity.ok(allDeclarations);
     }
 
     @GetMapping("/declaration/role/{role}")
@@ -101,15 +105,29 @@ public class DeclarationController {
                     .body(new MessageResponse("Error: Cannot set user authentication: {}" + e));
         }
 
+        String finalUserTin = userTin;
+        Person person = personRepository.findByTin(userTin)
+                .orElseThrow(() -> new RuntimeException("Person Not Found with Taxpayer Identification Number: " + finalUserTin));
+
+        for (Declaration declaration : person.getNotaryDeclarations()) {
+            if (declaration.getId() == id)
+                return ResponseEntity.ok(declaration);
+        }
+
+        for (Declaration declaration : person.getPurchaserDeclarations()) {
+            if (declaration.getId() == id)
+                return ResponseEntity.ok(declaration);
+        }
+
+        for (Declaration declaration : person.getSellerDeclarations()) {
+            if (declaration.getId() == id)
+                return ResponseEntity.ok(declaration);
+        }
+
         if (declarationRepository.existsById(id)) {
-            Declaration declaration = declarationRepository.getById(id);
-            if (declaration.getNotary().getTin().equals(userTin) || declaration.getSeller().getTin().equals(userTin) || declaration.getPurchaser().getTin().equals(userTin)) {
-                return ResponseEntity.ok(declaration.toJSON());
-            } else {
-                return ResponseEntity
-                        .badRequest()
-                        .body(new MessageResponse("Error: The User is not authorized for Declaration->" + id));
-            }
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: The User is not authorized for Declaration->" + id));
         } else {
             return ResponseEntity
                     .badRequest()

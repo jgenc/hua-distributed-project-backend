@@ -100,16 +100,4 @@ public class UserDetailsImpl implements UserDetails {
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
     }
-
-    public JSONObject toJSON() {
-        JSONObject jo = new JSONObject();
-        jo.put("id", id);
-        jo.put("username", username);
-        jo.put("tin", tin);
-        List<String> roles = getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-        jo.put("roles", roles);
-        return jo;
-    }
 }
