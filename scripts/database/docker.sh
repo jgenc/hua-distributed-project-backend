@@ -12,10 +12,11 @@ if [[ $mode == "start" ]]; then
 	-d postgres:11
 
 	# instead of waiting for container status, i use a dumb sleep 
-	sleep 5 
+	sleep 8
 
-	psql -h localhost -U postgres < create-tables.sql
 	psql -h localhost -U postgres < create-developer-user.sql
+	psql -h localhost -U developer -d taxdeclaration < taxdeclaration_init.sql
+	psql -h localhost -U developer -d taxdeclaration < taxdeclaration_data.sql
 elif [[ $mode == "ps" ]]; then
 	exec docker ps
 elif [[ $mode == "stop" ]]; then
