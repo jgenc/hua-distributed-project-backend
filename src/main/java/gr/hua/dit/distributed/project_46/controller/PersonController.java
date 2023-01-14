@@ -72,7 +72,8 @@ public class PersonController {
         if (personRepository.existsByTin(userTin)) {
             message="Person modified successfully!";
         }
-            // Create new Person
+
+        // Create new Person
         Person person = new Person(userTin, personRequest.getFirstName(), personRequest.getLastName(), personRequest.getAddress(), personRequest.getDoy());
         personRepository.save(person);
 

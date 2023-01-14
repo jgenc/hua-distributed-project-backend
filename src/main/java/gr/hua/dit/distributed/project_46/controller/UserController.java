@@ -1,14 +1,13 @@
 package gr.hua.dit.distributed.project_46.controller;
 
 import gr.hua.dit.distributed.project_46.config.JwtUtils;
-import gr.hua.dit.distributed.project_46.entity.ERole;
-import gr.hua.dit.distributed.project_46.entity.Role;
-import gr.hua.dit.distributed.project_46.entity.User;
+import gr.hua.dit.distributed.project_46.entity.*;
 import gr.hua.dit.distributed.project_46.payload.request.SignupRequest;
 import gr.hua.dit.distributed.project_46.payload.request.UpdatePasswordRequest;
 import gr.hua.dit.distributed.project_46.payload.request.UpdateRequest;
 import gr.hua.dit.distributed.project_46.payload.response.MessageResponse;
 import gr.hua.dit.distributed.project_46.payload.response.UserResponse;
+import gr.hua.dit.distributed.project_46.repository.DeclarationRepository;
 import gr.hua.dit.distributed.project_46.repository.PersonRepository;
 import gr.hua.dit.distributed.project_46.repository.RoleRepository;
 import gr.hua.dit.distributed.project_46.repository.UserRepository;
@@ -45,6 +44,8 @@ public class UserController {
 
     @Autowired
     JwtUtils jwtUtils;
+    @Autowired
+    private DeclarationRepository declarationRepository;
 
     @GetMapping ("/user")
     /* Get All Users */
@@ -205,8 +206,23 @@ public class UserController {
             userRepository.save(user);
             if (!(user.getTin().equals(updateRequest.getTin()))) {
                 /* update tin of user and user's personal data */
-            }
+                if (personRepository.existsByTin(user.getTin())) {
+                    Person person = personRepository.findByTin(user.getTin())
+                            .orElseThrow(() -> new RuntimeException("Person Not Found with Taxpayer Identification Number: " + user.getTin()));
 
+                    Person newperson = new Person(updateRequest.getTin(), person.getFirstName(), person.getLastName(), person.getAddress(), person.getDoy());
+                    personRepository.save(newperson);
+
+                    declarationRepository.updateNotary(newperson,person);
+                    declarationRepository.updatePurchaser(newperson,person);
+                    declarationRepository.updateSeller(newperson,person);
+
+                    personRepository.delete(person);
+
+                    user.setTin(updateRequest.getTin());
+                    userRepository.save(user);
+                }
+            }
         } else {
             return ResponseEntity
                     .badRequest()
