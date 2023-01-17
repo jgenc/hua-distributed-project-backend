@@ -28,4 +28,6 @@ public interface DeclarationRepository extends JpaRepository<Declaration, Long> 
     @Query("update Declaration d set d.seller = ?1 where d.seller = ?2")
     int updateSeller(Person newSeller, Person seller);
 
+    boolean existsBySellerAndPurchaserAndPropertyNumber(Person seller, Person purchaser, String propertyNumber);
+
 }

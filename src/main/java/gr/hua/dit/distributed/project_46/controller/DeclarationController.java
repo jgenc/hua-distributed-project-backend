@@ -166,11 +166,6 @@ public class DeclarationController {
                     .body(new MessageResponse("Error: Seller's Data Not Found with Taxpayer Identification Number: " + addDeclarationRequest.getSellerTin()));
         }
 
-        // Create new Declaration
-        Declaration declaration = new Declaration(addDeclarationRequest.getPropertyNumber(), addDeclarationRequest.getPropertyCategory(),
-                addDeclarationRequest.getPropertyDescription(), addDeclarationRequest.getTax());
-        declaration.setId((long) 0);
-
         String finalUserTin = userTin;
         Person notary = personRepository.findByTin(userTin)
                 .orElseThrow(() -> new RuntimeException("Person Not Found with Taxpayer Identification Number: " + finalUserTin));
@@ -181,11 +176,20 @@ public class DeclarationController {
         Person seller = personRepository.findByTin(addDeclarationRequest.getSellerTin())
                 .orElseThrow(() -> new RuntimeException("Person Not Found with Taxpayer Identification Number: " + addDeclarationRequest.getSellerTin()));
 
+        if (declarationRepository.existsBySellerAndPurchaserAndPropertyNumber(seller,purchaser,addDeclarationRequest.getPropertyNumber())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Declaration exists!"));
+        }
+
+        // Create new Declaration
+        Declaration declaration = new Declaration(addDeclarationRequest.getPropertyNumber(), addDeclarationRequest.getPropertyCategory(),
+                addDeclarationRequest.getPropertyDescription(), addDeclarationRequest.getTax());
+        declaration.setId((long) 0);
         declaration.setNotary(notary);
         declaration.setSeller(seller);
         declaration.setPurchaser(purchaser);
         declarationRepository.save(declaration);
-
         return ResponseEntity.ok(new MessageResponse("Declaration added successfully!"));
     }
 

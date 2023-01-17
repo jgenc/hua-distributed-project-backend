@@ -9,6 +9,7 @@ import gr.hua.dit.distributed.project_46.repository.UserRepository;
 import net.minidev.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ public class PersonController {
     JwtUtils jwtUtils;
 
     @GetMapping("/person")
+    @PreAuthorize("hasRole('NOTARY')")
     /* Get All Persons */
     public ResponseEntity<?> getPersons() {
         List<Person> persons=personRepository.findAll();
@@ -43,6 +45,7 @@ public class PersonController {
     }
 
     @GetMapping("/person/{tin}")
+    @PreAuthorize("hasRole('NOTARY')")
     /* Get Person with TIN */
     public ResponseEntity<?> getPerson(@PathVariable String tin) {
         if (personRepository.existsByTin(tin)) {
