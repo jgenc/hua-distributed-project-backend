@@ -187,7 +187,6 @@ public class UserController {
 
             user.setUsername(updateRequest.getUsername());
             String strRoles = updateRequest.getRole();
-            System.out.println("============================"+strRoles+">>>>>");
             Set<Role> roles = new HashSet<>();
 
             if (!(strRoles == null)) {

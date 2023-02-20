@@ -10,7 +10,7 @@ public class CompleteDeclarationRequest {
     private String contractDetails;
 
     @NotBlank(message="Please enter the Payment Method")
-    @Size(min = 3, max = 30, message = "Payment Method should be between 12 and 25 characters")
+    @Size(min = 3, max = 30, message = "Payment Method should be between 3 and 30 characters")
     private String paymentMethod;
 
     public String getContractDetails() {
