@@ -95,11 +95,11 @@ public class UserController {
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-            strRoles="citizen";
+            strRoles="ROLE_CITIZEN";
         }
 
         Role userRole;
-        if (strRoles.equals("notary")) {
+        if (strRoles.equals("ROLE_NOTARY")) {
             userRole = roleRepository.findByName(ERole.ROLE_NOTARY)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
         } else {
@@ -187,11 +187,12 @@ public class UserController {
 
             user.setUsername(updateRequest.getUsername());
             String strRoles = updateRequest.getRole();
+            System.out.println("============================"+strRoles+">>>>>");
             Set<Role> roles = new HashSet<>();
 
             if (!(strRoles == null)) {
                 Role userRole;
-                if (strRoles.equals("notary")) {
+                if (strRoles.equals("ROLE_NOTARY")) {
                     userRole = roleRepository.findByName(ERole.ROLE_NOTARY)
                             .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                 } else {
