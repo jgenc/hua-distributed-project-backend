@@ -45,7 +45,6 @@ public class PersonController {
     }
 
     @GetMapping("/person/{tin}")
-    @PreAuthorize("hasRole('NOTARY')")
     /* Get Person with TIN */
     public ResponseEntity<?> getPerson(@PathVariable String tin) {
         if (personRepository.existsByTin(tin)) {
