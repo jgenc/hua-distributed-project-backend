@@ -1,0 +1,8 @@
+#!/bin/bash
+docker run --rm \
+	--name fastapi \
+	-e POSTGRES_PASSWORD=dev \
+  --net=host \
+	-e PGDATA=/data \
+	-v fastapi-data:/data \
+	-d postgres

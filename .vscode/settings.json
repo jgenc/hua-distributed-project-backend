@@ -1,0 +1,16 @@
+{
+  "python.formatting.provider": "black",
+  "python.analysis.typeCheckingMode": "basic",
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "testapi",
+      "database": "db",
+      "username": "postgres",
+      "password": "dev"
+    }
+  ]
+}
