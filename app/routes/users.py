@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from ..dependencies import get_db, schemas, crud
 
 
-router = APIRouter(prefix="/users")
+router = APIRouter(prefix="/users", tags=["users"])
 crud = crud.Users()
 
 

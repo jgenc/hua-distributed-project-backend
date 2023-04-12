@@ -1,5 +1,7 @@
-from .sql_app.database import SessionLocal, engine
-from .sql_app import crud, models, schemas
+from .db.database import SessionLocal, engine
+from .db import crud, models
+
+from . import schemas
 
 models.Base.metadata.create_all(bind=engine)
 

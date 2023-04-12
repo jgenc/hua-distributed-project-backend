@@ -12,5 +12,6 @@
       "username": "postgres",
       "password": "dev"
     }
-  ]
+  ],
+  "todo-tree.tree.showBadges": true
 }
