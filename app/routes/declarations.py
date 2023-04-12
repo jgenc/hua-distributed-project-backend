@@ -4,13 +4,13 @@ from sqlalchemy.orm import Session
 from ..dependencies import get_db, schemas, crud
 
 from ..db.models.role import RoleEnum
-from ..db.models.declaration import Declaration
+from ..db.models.declaration import Declaration 
 
 router = APIRouter(prefix="/declarations", tags=["declarations"])
 crud = crud.Declarations()
 
 
-@router.post("", response_model=schemas.Declaration)
+@router.post("", response_model=schemas.DeclarationBase)
 async def post_declaration(
     declaration: schemas.DeclarationCreate, db: Session = Depends(get_db)
 ):
@@ -19,16 +19,10 @@ async def post_declaration(
     # however, this does not really make any sense. The same guys could make
     # another deal again. For now we will let the backend to look *just*
     # at the declaration_id
-    db_declaration = crud.get_declaration(db, declaration.id)
-    if db_declaration:
-        raise HTTPException(
-            status_code=400,
-            detail="A declaration with the provided id already exists",
-        )
     return crud.create_declaration(db=db, declaration=declaration)
 
 
-@router.get("{id}", response_model=schemas.Declaration | None)
+@router.get("{id}", response_model=schemas.DeclarationBase | None)
 async def get_declaration(id: int, db: Session = Depends(get_db)):
     # TODO: Check if provided token corresponds to any of the roles of the declaration
     declaration = crud.get_declaration(db, id)
@@ -40,12 +34,12 @@ async def get_declaration(id: int, db: Session = Depends(get_db)):
 
 
 # Debug route.
-@router.get("", response_model=list[schemas.Declaration])
+@router.get("", response_model=list[schemas.DeclarationBase])
 async def get_all_declarations(db: Session = Depends(get_db)):
     return crud.get_declarations(db)
 
 
-@router.get("", response_model=list[schemas.Declaration])
+@router.get("", response_model=list[schemas.DeclarationBase])
 async def get_declarations_person(db: Session = Depends(get_db)):
     # This should return the declarations that regard the logged in user.
     # This should look at the token of the logged in user, find out who it is
@@ -54,7 +48,7 @@ async def get_declarations_person(db: Session = Depends(get_db)):
     pass
 
 
-@router.get("/role/{role}", response_model=list[schemas.Declaration])
+@router.get("/role/{role}", response_model=list[schemas.DeclarationBase])
 async def get_declaratons_role(role: RoleEnum, db: Session = Depends(get_db)):
     # TODO: Return all declarations based on the user AND the role provided
     # TBH, I do not rememember using this, I should research it
@@ -79,6 +73,6 @@ async def complete_declaration(
 ):
     # TODO: No TIN required, should be done by token
     res = crud.update_declaration_completion(db, id, tin, data)
-    if not isinstance(res, Declaration):
+    if not isinstance(res, (Declaration)):
         raise HTTPException(status_code=res["status_code"], detail=res["detail"])
     return res

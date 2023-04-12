@@ -1,15 +1,13 @@
 from pydantic import BaseModel
 from enum import Enum
 
+
+class StatusEnum(str, Enum):
+    pending = "pending"
+    completed = "completed"
+
+
 class DeclarationCreate(BaseModel):
-    class StatusEnum(str, Enum):
-        pending = "pending"
-        completed = "completed"
-
-    # FIXME: Do we actually need id in here?
-
-    id: int
-    status: StatusEnum
     notary_tin: str
     seller_tin: str
     purchaser_tin: str
@@ -18,7 +16,9 @@ class DeclarationCreate(BaseModel):
     tax: float
 
 
-class Declaration(DeclarationCreate):
+class DeclarationBase(DeclarationCreate):
+    id: int
+    status: StatusEnum
     seller_acceptance: bool
     purchaser_acceptance: bool
     contract_details: str
@@ -27,6 +27,7 @@ class Declaration(DeclarationCreate):
     class Config:
         use_enum_values = True
         orm_mode = True
+
 
 class DeclarationCompletion(BaseModel):
     contract_details: str

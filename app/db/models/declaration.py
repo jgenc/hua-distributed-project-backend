@@ -14,7 +14,7 @@ class StatusEnum(str, enum.Enum):
 class Declaration(Base):
     __tablename__ = "declarations"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement="auto")
     status = Column(Enum(StatusEnum))
 
     notary_tin: Mapped[String] = mapped_column(ForeignKey("persons.tin"))
