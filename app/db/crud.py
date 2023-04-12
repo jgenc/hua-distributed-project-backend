@@ -1,5 +1,5 @@
-from sqlalchemy import update, Update
-from sqlalchemy.orm import Session
+from sqlalchemy import update, select
+from sqlalchemy.orm import Session, subqueryload, load_only
 
 from . import models
 from .. import schemas
@@ -14,13 +14,32 @@ class Users:
         return db.query(models.User).filter(models.User.id == user_id).first()
 
     def get_users(self, db: Session, skip: int = 0, limit: int = 10):
-        return db.query(models.User).offset(skip).limit(limit).all()
+        query = (
+            select(models.User)
+            .options(
+                subqueryload(models.User.role)
+            )
+            .offset(skip)
+            .limit(limit)
+            .execution_options(populate_existing=True)
+        )
+        response = db.execute(query).scalars().all()
+        return response
+
+    def create_role(self, db: Session, id: int, role: schemas.RoleEnum):
+        db_role = models.Role(id=id, name=role)
+        return db_role
 
     def create_user(self, db: Session, user: schemas.UserCreate):
-        not_really_hashed = user.password + "_hashed"
+        # TODO: Hash the password
         db_user = models.User(
-            password=not_really_hashed, username=user.username, tin=user.tin
+            username=user.username,
+            tin=user.tin,
+            password=user.password,
         )
+        db_role = Users.create_role(self, db=db, id=db_user.id, role=user.role)
+        db_user.role = db_role
+        db.add(db_user)
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
@@ -55,6 +74,7 @@ class Declarations:
     def create_declaration(self, db: Session, declaration: schemas.DeclarationCreate):
         db_declaration = models.Declaration(
             **declaration.dict(),
+            status=models.declaration.StatusEnum.pending,
             seller_acceptance=False,
             purchaser_acceptance=False,
             contract_details="",
@@ -104,7 +124,9 @@ class Declarations:
         db.refresh(declaration)
         return declaration
 
-    def update_declaration_completion(self, db: Session, id: int, tin: str, data: schemas.DeclarationCompletion):
+    def update_declaration_completion(
+        self, db: Session, id: int, tin: str, data: schemas.DeclarationCompletion
+    ):
         declaration = Declarations.get_declaration(self, db, id)
         if not declaration:
             return {"status_code": 404, "detail": "Declaration not found"}
@@ -113,12 +135,15 @@ class Declarations:
         if declaration.status == models.declaration.StatusEnum.completed:
             return {"status_code": 400, "detail": "Declaration is already completed"}
         if not (declaration.purchaser_acceptance and declaration.seller_acceptance):
-            return {"status_code": 400, "detail": "Declaration is not accepted by all of the parties involved"}
+            return {
+                "status_code": 400,
+                "detail": "Declaration is not accepted by all of the parties involved",
+            }
 
         stmt = (
             update(models.Declaration)
             .where(models.Declaration.id == id)
-            .values(**data.__dict__, status=schemas.DeclarationCreate.StatusEnum.completed)
+            .values(**data.__dict__, status=schemas.declaration.StatusEnum.completed)
         )
         db.execute(statement=stmt)
         db.commit()

@@ -1,9 +1,11 @@
 from pydantic import BaseModel
+from .role import Role
 
 
 class UserBase(BaseModel):
     tin: str
     username: str
+    role: Role 
 
 
 class UserCreate(UserBase):
