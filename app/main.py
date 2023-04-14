@@ -1,13 +1,8 @@
 from fastapi import FastAPI
-from .routes import users, declarations, persons
+from .routes import users, declarations, persons, login
 
 app = FastAPI()
 app.include_router(users.router)
 app.include_router(declarations.router)
 app.include_router(persons.router)
-
-
-
-@app.get("/")
-def read_root():
-    return {"msg": "hello"}
+app.include_router(login.router)
