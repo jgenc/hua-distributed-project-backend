@@ -9,7 +9,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, nullable=True, unique=True)
+    username = Column(String(9), nullable=True, unique=True)
     password = Column(String, nullable=True)
     tin = Column(String(9), nullable=True, unique=True, index=True)
 

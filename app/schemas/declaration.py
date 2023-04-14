@@ -1,5 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from enum import Enum
+
+from .user import tin_field
+
+contract_details_field = Field(min_length=5, max_length=100)
+payment_method_field = Field(min_length=4, max_length=20)
 
 
 class StatusEnum(str, Enum):
@@ -8,21 +13,22 @@ class StatusEnum(str, Enum):
 
 
 class DeclarationCreate(BaseModel):
-    seller_tin: str
-    purchaser_tin: str
-    property_number: str
-    property_description: str
-    tax: float
+    seller_tin: str = tin_field
+    purchaser_tin: str = tin_field
+    property_number: str = Field(min_length=5, max_length=10)
+    property_description: str = Field(min_length=5, max_length=100)
+    tax: float = Field(min_size=0, max_size=1_000_000)
 
 
 class DeclarationBase(DeclarationCreate):
     id: int
-    notary_tin: str
+    notary_tin: str = tin_field
     status: StatusEnum
     seller_acceptance: bool
     purchaser_acceptance: bool
-    contract_details: str
-    payment_method: str
+    contract_details: str = contract_details_field
+    # TODO: Create an enum for this field. Both schemas and models.
+    payment_method: str = payment_method_field
 
     class Config:
         use_enum_values = True
@@ -30,5 +36,5 @@ class DeclarationBase(DeclarationCreate):
 
 
 class DeclarationCompletion(BaseModel):
-    contract_details: str
-    payment_method: str
+    contract_details: str = contract_details_field
+    payment_method: str = payment_method_field
