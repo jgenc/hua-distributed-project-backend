@@ -1,0 +1,1123 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "FastAPI",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/admin/user": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Get All Users",
+        "operationId": "get_all_users_api_admin_user_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get All Users Api Admin User Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Post User",
+        "operationId": "post_user_api_admin_user_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/admin/user/{tin}": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Get User",
+        "operationId": "get_user_api_admin_user__tin__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tin",
+              "type": "string"
+            },
+            "name": "tin",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Update User",
+        "operationId": "update_user_api_admin_user__tin__put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tin",
+              "type": "string"
+            },
+            "name": "tin",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Update User Password",
+        "operationId": "update_user_password_api_admin_user__tin__post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tin",
+              "type": "string"
+            },
+            "name": "tin",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "New Password",
+              "type": "string"
+            },
+            "name": "new_password",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Delete User",
+        "operationId": "delete_user_api_admin_user__tin__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tin",
+              "type": "string"
+            },
+            "name": "tin",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/declarations": {
+      "get": {
+        "tags": [
+          "declarations"
+        ],
+        "summary": "Get Declarations Person",
+        "operationId": "get_declarations_person_api_declarations_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Declarations Person Api Declarations Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeclarationBase"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "declarations"
+        ],
+        "summary": "Post Declaration",
+        "operationId": "post_declaration_api_declarations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeclarationCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeclarationBase"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/declarations/{id}": {
+      "get": {
+        "tags": [
+          "declarations"
+        ],
+        "summary": "Get Declaration",
+        "operationId": "get_declaration_api_declarations__id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "integer"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeclarationBase"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/declarations/role/{role}": {
+      "get": {
+        "tags": [
+          "declarations"
+        ],
+        "summary": "Get Declaratons Role",
+        "operationId": "get_declaratons_role_api_declarations_role__role__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/app__db__models__role__RoleEnum"
+            },
+            "name": "role",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Declaratons Role Api Declarations Role  Role  Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeclarationBase"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/declarations/accept/{id}": {
+      "post": {
+        "tags": [
+          "declarations"
+        ],
+        "summary": "Accept Declaration",
+        "operationId": "accept_declaration_api_declarations_accept__id__post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "integer"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/declarations/complete/{id}": {
+      "post": {
+        "tags": [
+          "declarations"
+        ],
+        "summary": "Complete Declaration",
+        "operationId": "complete_declaration_api_declarations_complete__id__post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "integer"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeclarationCompletion"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/persons": {
+      "get": {
+        "tags": [
+          "persons"
+        ],
+        "summary": "Read All Persons",
+        "operationId": "read_all_persons_api_persons_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Read All Persons Api Persons Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Person"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "persons"
+        ],
+        "summary": "Create Person",
+        "operationId": "create_person_api_persons_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/persons/{tin}": {
+      "get": {
+        "tags": [
+          "persons"
+        ],
+        "summary": "Read Person",
+        "operationId": "read_person_api_persons__tin__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tin",
+              "type": "string"
+            },
+            "name": "tin",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login",
+        "operationId": "login_api_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_login_api_auth_login_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_login_api_auth_login_post": {
+        "title": "Body_login_api_auth_login_post",
+        "required": [
+          "username",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "grant_type": {
+            "title": "Grant Type",
+            "pattern": "password",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "scope": {
+            "title": "Scope",
+            "type": "string",
+            "default": ""
+          },
+          "client_id": {
+            "title": "Client Id",
+            "type": "string"
+          },
+          "client_secret": {
+            "title": "Client Secret",
+            "type": "string"
+          }
+        }
+      },
+      "DeclarationBase": {
+        "title": "DeclarationBase",
+        "required": [
+          "seller_tin",
+          "purchaser_tin",
+          "property_number",
+          "property_description",
+          "tax",
+          "id",
+          "notary_tin",
+          "status",
+          "seller_acceptance",
+          "purchaser_acceptance",
+          "contract_details",
+          "payment_method"
+        ],
+        "type": "object",
+        "properties": {
+          "seller_tin": {
+            "title": "Seller Tin",
+            "type": "string"
+          },
+          "purchaser_tin": {
+            "title": "Purchaser Tin",
+            "type": "string"
+          },
+          "property_number": {
+            "title": "Property Number",
+            "type": "string"
+          },
+          "property_description": {
+            "title": "Property Description",
+            "type": "string"
+          },
+          "tax": {
+            "title": "Tax",
+            "type": "number"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "notary_tin": {
+            "title": "Notary Tin",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusEnum"
+          },
+          "seller_acceptance": {
+            "title": "Seller Acceptance",
+            "type": "boolean"
+          },
+          "purchaser_acceptance": {
+            "title": "Purchaser Acceptance",
+            "type": "boolean"
+          },
+          "contract_details": {
+            "title": "Contract Details",
+            "type": "string"
+          },
+          "payment_method": {
+            "title": "Payment Method",
+            "type": "string"
+          }
+        }
+      },
+      "DeclarationCompletion": {
+        "title": "DeclarationCompletion",
+        "required": [
+          "contract_details",
+          "payment_method"
+        ],
+        "type": "object",
+        "properties": {
+          "contract_details": {
+            "title": "Contract Details",
+            "type": "string"
+          },
+          "payment_method": {
+            "title": "Payment Method",
+            "type": "string"
+          }
+        }
+      },
+      "DeclarationCreate": {
+        "title": "DeclarationCreate",
+        "required": [
+          "seller_tin",
+          "purchaser_tin",
+          "property_number",
+          "property_description",
+          "tax"
+        ],
+        "type": "object",
+        "properties": {
+          "seller_tin": {
+            "title": "Seller Tin",
+            "type": "string"
+          },
+          "purchaser_tin": {
+            "title": "Purchaser Tin",
+            "type": "string"
+          },
+          "property_number": {
+            "title": "Property Number",
+            "type": "string"
+          },
+          "property_description": {
+            "title": "Property Description",
+            "type": "string"
+          },
+          "tax": {
+            "title": "Tax",
+            "type": "number"
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "Person": {
+        "title": "Person",
+        "required": [
+          "first_name",
+          "last_name",
+          "address",
+          "doy",
+          "tin"
+        ],
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "title": "First Name",
+            "type": "string"
+          },
+          "last_name": {
+            "title": "Last Name",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "doy": {
+            "title": "Doy",
+            "type": "string"
+          },
+          "tin": {
+            "title": "Tin",
+            "type": "string"
+          }
+        }
+      },
+      "PersonCreate": {
+        "title": "PersonCreate",
+        "required": [
+          "first_name",
+          "last_name",
+          "address",
+          "doy"
+        ],
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "title": "First Name",
+            "type": "string"
+          },
+          "last_name": {
+            "title": "Last Name",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "doy": {
+            "title": "Doy",
+            "type": "string"
+          }
+        }
+      },
+      "Role": {
+        "title": "Role",
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/app__schemas__role__RoleEnum"
+          }
+        }
+      },
+      "StatusEnum": {
+        "title": "StatusEnum",
+        "enum": [
+          "pending",
+          "completed"
+        ],
+        "type": "string",
+        "description": "An enumeration."
+      },
+      "Token": {
+        "title": "Token",
+        "required": [
+          "access_token",
+          "token_type"
+        ],
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "title": "Access Token",
+            "type": "string"
+          },
+          "token_type": {
+            "title": "Token Type",
+            "type": "string"
+          }
+        }
+      },
+      "User": {
+        "title": "User",
+        "required": [
+          "tin",
+          "username",
+          "id",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "tin": {
+            "title": "Tin",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          }
+        }
+      },
+      "UserCreate": {
+        "title": "UserCreate",
+        "required": [
+          "tin",
+          "username",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "tin": {
+            "title": "Tin",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/app__schemas__role__RoleEnum"
+              }
+            ],
+            "default": "ROLE_CITIZEN"
+          }
+        }
+      },
+      "UserUpdate": {
+        "title": "UserUpdate",
+        "type": "object",
+        "properties": {
+          "username": {
+            "title": "Username",
+            "type": "string"
+          },
+          "tin": {
+            "title": "Tin",
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/app__schemas__role__RoleEnum"
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      },
+      "app__db__models__role__RoleEnum": {
+        "title": "RoleEnum",
+        "enum": [
+          "ROLE_CITIZEN",
+          "ROLE_NOTARY",
+          "ROLE_ADMIN"
+        ],
+        "type": "string",
+        "description": "An enumeration."
+      },
+      "app__schemas__role__RoleEnum": {
+        "title": "RoleEnum",
+        "enum": [
+          "ROLE_CITIZEN",
+          "ROLE_NOTARY",
+          "ROLE_ADMIN"
+        ],
+        "type": "string",
+        "description": "An enumeration."
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "scopes": {},
+            "tokenUrl": "/api/auth/login"
+          }
+        }
+      }
+    }
+  }
+}
