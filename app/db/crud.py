@@ -2,7 +2,7 @@ from sqlalchemy import update, select
 from sqlalchemy.orm import Session, subqueryload, load_only
 
 from . import models
-from .. import schemas
+from .. import schemas, utils
 
 # TODO: Should I make the methods static?
 # And even if I do, is there a point of creating the classes? Maybe a module
@@ -27,20 +27,22 @@ class Users:
         response = db.execute(query).scalars().all()
         return response
 
+    def read_role(self, db: Session, user_id: int):
+        return db.query(models.Role).filter(models.Role.id == user_id).first()
+
     def create_role(self, db: Session, id: int, role: schemas.RoleEnum):
         db_role = models.Role(id=id, name=role)
         return db_role
 
     def create_user(self, db: Session, user: schemas.UserCreate):
-        # TODO: Hash the password
+        hashed_password = utils.hash.get_password_hash(user.password)
         db_user = models.User(
             username=user.username,
             tin=user.tin,
-            password=user.password,
+            password=hashed_password,
         )
-        db_role = Users.create_role(self, db=db, id=db_user.id, role=user.role)
+        db_role = Users.create_role(self, db=db, id=db_user.id, role=user.role)  # type: ignore
         db_user.role = db_role
-        db.add(db_user)
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
@@ -74,6 +76,7 @@ class Users:
         db.commit()
         return {"msg": "Password updated successfully"}
 
+
 class Persons:
     def create_person(self, db: Session, person: schemas.Person):
         db_person = models.Person(**person.dict())
@@ -85,8 +88,7 @@ class Persons:
     def read_all_persons(self, db: Session):
         return db.query(models.Person).all()
 
-    @staticmethod
-    def read_person(db: Session, tin: str):
+    def read_person(self, db: Session, tin: str):
         return db.query(models.Person).where(models.Person.tin == tin).first()
 
 
@@ -177,3 +179,15 @@ class Declarations:
         db.commit()
         db.refresh(declaration)
         return declaration
+
+
+class Auth:
+    def auth_user(self, db: Session, username: str, password: str):
+        db_user: models.User = (
+            db.query(models.User).where(models.User.username == username).first()
+        )
+        if not db_user:
+            return False
+        if not utils.hash.verify_password(password, db_user.password):
+            return False
+        return db_user

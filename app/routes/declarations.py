@@ -1,16 +1,28 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from ..dependencies import get_db, schemas, crud
+from ..dependencies import (
+    get_db,
+    schemas,
+    crud,
+    is_user_logged_in,
+    is_user_notary,
+)
 
 from ..db.models.role import RoleEnum
-from ..db.models.declaration import Declaration 
+from ..db.models.declaration import Declaration
 
-router = APIRouter(prefix="/declarations", tags=["declarations"])
+router = APIRouter(
+    prefix="/api/declarations",
+    tags=["declarations"],
+    dependencies=[Depends(is_user_logged_in)],
+)
 crud = crud.Declarations()
 
 
-@router.post("", response_model=schemas.DeclarationBase)
+@router.post(
+    "", response_model=schemas.DeclarationBase, dependencies=[Depends(is_user_notary)]
+)
 async def post_declaration(
     declaration: schemas.DeclarationCreate, db: Session = Depends(get_db)
 ):
@@ -64,7 +76,7 @@ async def accept_declaration(id: int, tin: str, db: Session = Depends(get_db)):
     return res
 
 
-@router.post("/complete/{id}")
+@router.post("/complete/{id}", dependencies=[Depends(is_user_notary)])
 async def complete_declaration(
     id: int,
     tin: str,

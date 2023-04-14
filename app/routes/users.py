@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from ..dependencies import get_db, schemas, crud
+from ..dependencies import get_db, schemas, crud, is_user_admin
 
 from ..db.models import User
 
 
-router = APIRouter(prefix="/admin/user", tags=["admin"])
+router = APIRouter(
+    prefix="/api/admin/user", tags=["admin"], dependencies=[Depends(is_user_admin)]
+)
 crud = crud.Users()
 
 
@@ -71,11 +73,12 @@ async def update_user(
     # return updated_user
     return crud.update_user(db, db_user, updated_user)
 
+
 @router.post("/{tin}")
 async def update_user_password(
-    tin: str, new_password: str, db: Session = Depends(get_db) 
+    tin: str, new_password: str, db: Session = Depends(get_db)
 ):
     db_user = crud.read_user(db, tin)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    return crud.update_user_password(db, db_user, new_password) 
+    return crud.update_user_password(db, db_user, new_password)

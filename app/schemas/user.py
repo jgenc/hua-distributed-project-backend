@@ -23,3 +23,7 @@ class UserUpdate(BaseModel):
     username: str | None = None
     tin: str | None = None
     role: RoleEnum | None = None
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
