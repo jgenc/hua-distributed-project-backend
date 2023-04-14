@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:15
+    # ports:
+    #   - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=dev
+      - POSTGRES_DB=db
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  fastapi:
+    build:
+      context: .
+      dockerfile: backend.dockerfile
+    # Not giving envfile for now
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
