@@ -27,5 +27,5 @@ async def login(
         admin=db_user.role.name == schemas.RoleEnum.ROLE_ADMIN,
         notary=db_user.role.name == schemas.RoleEnum.ROLE_NOTARY,
     )
-    token = utils.hash.create_access_token(token_data.dict())
+    token = utils.token.create_access_token(token_data.dict())
     return schemas.Token(access_token=token, token_type="bearer")

@@ -8,7 +8,6 @@ class StatusEnum(str, Enum):
 
 
 class DeclarationCreate(BaseModel):
-    notary_tin: str
     seller_tin: str
     purchaser_tin: str
     property_number: str
@@ -18,6 +17,7 @@ class DeclarationCreate(BaseModel):
 
 class DeclarationBase(DeclarationCreate):
     id: int
+    notary_tin: str
     status: StatusEnum
     seller_acceptance: bool
     purchaser_acceptance: bool

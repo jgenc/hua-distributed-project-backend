@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
 from .db.database import SessionLocal, engine
@@ -20,13 +20,28 @@ def get_db():
         db.close()
 
 
-async def is_user_admin(token: Annotated[str, Depends(oauth2_scheme)]):
-    return utils.hash.get_token_admin_role(token)
-
-
-async def is_user_notary(token: Annotated[str, Depends(oauth2_scheme)]):
-    return utils.hash.get_token_notary_role(token)
-
-
 async def is_user_logged_in(token: Annotated[str, Depends(oauth2_scheme)]):
-    return utils.hash.get_token(token)
+    return utils.token.get_token(token)
+
+
+async def is_simple_user(
+    user: Annotated[schemas.TokenData, Depends(is_user_logged_in)]
+):
+    if user.admin:
+        raise HTTPException(status.HTTP_403_FORBIDDEN)
+    return True
+
+
+async def is_user_admin(user: Annotated[schemas.TokenData, Depends(is_user_logged_in)]):
+    if not user.admin:
+        raise HTTPException(status.HTTP_403_FORBIDDEN)
+    return True
+
+
+async def is_user_notary(
+    user: Annotated[schemas.TokenData, Depends(is_user_logged_in)]
+):
+    print(user)
+    if not user.notary:
+        raise HTTPException(status.HTTP_403_FORBIDDEN)
+    return True

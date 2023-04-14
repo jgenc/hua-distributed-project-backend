@@ -35,7 +35,7 @@ class Users:
         return db_role
 
     def create_user(self, db: Session, user: schemas.UserCreate):
-        hashed_password = utils.hash.get_password_hash(user.password)
+        hashed_password = utils.token.get_password_hash(user.password)
         db_user = models.User(
             username=user.username,
             tin=user.tin,
@@ -93,17 +93,43 @@ class Persons:
 
 
 class Declarations:
+    PERSON_DOES_NOT_EXIST = lambda tin: {
+        "status_code": 404,
+        "detail": f"Person with TIN {tin} does not exist",
+    }
+
+    IS_DECLARATION_RELEVANT = lambda tin: (
+        models.Declaration.notary_tin == tin
+        or models.Declaration.purchaser_tin == tin
+        or models.Declaration.seller_tin == tin
+    )
+
     def get_declaration(self, db: Session, id: int):
         return db.query(models.Declaration).where(models.Declaration.id == id).first()
 
-    def get_declarations(self, db: Session):
-        x = db.query(models.Declaration).all()
-        # print("The Object is: ", x[0].__dict__)
-        return x
+    def get_person_declarations(self, db: Session, tin: str):
+        return (
+            db.query(models.Declaration)
+            .where(Declarations.IS_DECLARATION_RELEVANT(tin))
+            .all()
+        )
 
-    def create_declaration(self, db: Session, declaration: schemas.DeclarationCreate):
+    def create_declaration(
+        self, db: Session, declaration: schemas.DeclarationCreate, notary_tin: str
+    ):
+        if declaration.seller_tin == declaration.purchaser_tin:
+            return {"status_code": 400, "detail": "Seller and purchaser are the same"}
+
+        for tin in [
+            declaration.purchaser_tin,
+            declaration.seller_tin,
+        ]:
+            if not Persons().read_person(db, tin):
+                return Declarations.PERSON_DOES_NOT_EXIST(tin)
+
         db_declaration = models.Declaration(
             **declaration.dict(),
+            notary_tin=notary_tin,
             status=models.declaration.StatusEnum.pending,
             seller_acceptance=False,
             purchaser_acceptance=False,
@@ -116,9 +142,6 @@ class Declarations:
         return db_declaration
 
     def update_declaration_acceptance(self, db: Session, id: int, tin: str):
-        # TODO: DO NOT USE THIS WITH TIN, should be used with token
-        # TODO: Integer literals for return values are kinda bad (?)
-
         declaration = Declarations.get_declaration(self, db, id)
         if not declaration:
             return {"status_code": 404, "detail": "Declaration not found"}
@@ -173,7 +196,7 @@ class Declarations:
         stmt = (
             update(models.Declaration)
             .where(models.Declaration.id == id)
-            .values(**data.__dict__, status=schemas.declaration.StatusEnum.completed)
+            .values(**data.__dict__, status=schemas.StatusEnum.completed)
         )
         db.execute(statement=stmt)
         db.commit()
@@ -188,6 +211,6 @@ class Auth:
         )
         if not db_user:
             return False
-        if not utils.hash.verify_password(password, db_user.password):
+        if not utils.token.verify_password(password, db_user.password):
             return False
         return db_user
