@@ -15,6 +15,5 @@ class Role(Base):
     __tablename__ = "roles"
 
     id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
-    # name = Column(Enum(RoleEnum), unique=True)
-    name: Mapped[RoleEnum] = mapped_column(unique=True)
+    name: Mapped[RoleEnum] = mapped_column()
     user = relationship("User", back_populates="role", uselist=False, cascade="all")

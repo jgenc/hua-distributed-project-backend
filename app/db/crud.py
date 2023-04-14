@@ -10,15 +10,16 @@ from .. import schemas
 
 
 class Users:
-    def get_user(self, db: Session, user_id: int):
-        return db.query(models.User).filter(models.User.id == user_id).first()
+    def read_user(self, db: Session, user_tin: str):
+        return db.query(models.User).filter(models.User.tin == user_tin).first()
 
-    def get_users(self, db: Session, skip: int = 0, limit: int = 10):
+    def read_user_by_username(self, db: Session, username: str):
+        return db.query(models.User).filter(models.User.username == username).first()
+
+    def read_users(self, db: Session, skip: int = 0, limit: int = 10):
         query = (
             select(models.User)
-            .options(
-                subqueryload(models.User.role)
-            )
+            .options(subqueryload(models.User.role))
             .offset(skip)
             .limit(limit)
             .execution_options(populate_existing=True)
@@ -45,6 +46,33 @@ class Users:
         db.refresh(db_user)
         return db_user
 
+    # Here I get an object of model User because I already called the database
+    # to check if a user exists. If everything is okay, just delete the user
+    # and do not make another call
+    def delete_user(self, db: Session, user: models.User):
+        # TODO: The API doc says that the delete function should just return a
+        # message. I find that dumb.
+        db.delete(user)
+        db.commit()
+        return user
+
+    def update_user(self, db: Session, user: models.User, user_update: dict):
+        query = (
+            update(models.User).where(models.User.id == user.id).values(**user_update)
+        )
+        db.execute(query)
+        db.commit()
+        return {"msg": "User updated successfully"}
+
+    def update_user_password(self, db: Session, user: models.User, new_password: str):
+        query = (
+            update(models.User)
+            .where(models.User.id == user.id)
+            .values(password=new_password)
+        )
+        db.execute(query)
+        db.commit()
+        return {"msg": "Password updated successfully"}
 
 class Persons:
     def create_person(self, db: Session, person: schemas.Person):

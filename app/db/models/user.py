@@ -11,6 +11,6 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, nullable=True, unique=True)
     password = Column(String, nullable=True)
-    tin = Column(String(9), nullable=True, unique=True)
+    tin = Column(String(9), nullable=True, unique=True, index=True)
 
     role = relationship("Role", back_populates="user", uselist=False, cascade="all")
