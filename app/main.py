@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import users, declarations, persons, login
+from app.routes import users, declarations, persons, login
 
 app = FastAPI()
 app.include_router(users.router)
