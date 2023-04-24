@@ -1,8 +1,7 @@
 services:
+
   db:
     image: postgres:15
-    # ports:
-    #   - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=dev
@@ -15,7 +14,7 @@ services:
       timeout: 5s
       retries: 3
 
-  fastapi:
+  backend:
     build:
       context: .
       dockerfile: backend.dockerfile
@@ -25,3 +24,28 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  # TODO: Look at Traefik 
+  # TODO: https://fastapi.tiangolo.com/deployment/docker/#behind-a-tls-termination-proxy
+  proxy:
+    image: nginx:latest
+    volumes:
+      - ./assets/nginx/nginx.http.config:/etc/nginx/nginx.conf
+    #   #- ./assets/nginx/certs:/etc/nginx/certs
+    #   - static_volume:/app/static
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: on-failure:5
+
+  backend-migrate:
+    command:  bash -c "cd app/ && alembic upgrade head"
+    build:
+      context: .
+      dockerfile: backend.dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_started
