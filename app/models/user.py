@@ -2,7 +2,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Enum
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from typing import List, FrozenSet
 
-from ..database import Base
+from ..db.database import Base
 from .role import Role
 
 class User(Base):

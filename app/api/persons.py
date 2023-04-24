@@ -11,6 +11,7 @@ from ..dependencies import (
 )
 
 router = APIRouter(prefix="/api/persons", tags=["persons"])
+crud = crud.Persons()
 
 
 @router.post("", response_model=schemas.Person)
@@ -22,10 +23,10 @@ async def create_person(
     if token_data.admin:
         raise HTTPException(status_code=403, detail="Forbidden")
 
-    db_person = crud.persons.read_person(db, token_data.tin)
+    db_person = crud.read_person(db, token_data.tin)
     if db_person:
         raise HTTPException(status_code=400, detail="Person already exists")
-    db_person = crud.persons.create_person(
+    db_person = crud.create_person(
         db, schemas.Person(**person.dict(), tin=token_data.tin)
     )
     return db_person
@@ -35,7 +36,7 @@ async def create_person(
     "", response_model=list[schemas.Person], dependencies=[Depends(is_user_notary)]
 )
 async def read_all_persons(db: Session = Depends(get_db)):
-    return crud.persons.read_all_persons(db)
+    return crud.read_all_persons(db)
 
 
 @router.get("/{tin}", response_model=schemas.Person)
@@ -51,9 +52,9 @@ async def read_person(
         raise HTTPException(status_code=403, detail="Forbidden")
 
     if token_data.tin == tin:
-        return crud.persons.read_person(db, tin)
+        return crud.read_person(db, tin)
 
-    person = crud.persons.read_person(db, tin)
+    person = crud.read_person(db, tin)
     if not person:
         raise HTTPException(status_code=404, detail=f"Person was not found")
 

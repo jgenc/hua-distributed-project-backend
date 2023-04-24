@@ -11,14 +11,15 @@ from ..dependencies import (
     is_simple_user,
 )
 
-from app.models.role import RoleEnum
-from app.models.declaration import Declaration
+from ..models.role import RoleEnum
+from ..models.declaration import Declaration
 
 router = APIRouter(
     prefix="/api/declarations",
     tags=["declarations"],
     dependencies=[Depends(is_simple_user)],
 )
+crud = crud.Declarations()
 
 
 @router.post(
@@ -29,7 +30,7 @@ async def post_declaration(
     token: Annotated[schemas.TokenData, Depends(is_user_logged_in)],
     db: Session = Depends(get_db),
 ):
-    res = crud.declarations.create_declaration(db=db, declaration=declaration, notary_tin=token.tin)
+    res = crud.create_declaration(db=db, declaration=declaration, notary_tin=token.tin)
     if not isinstance(res, Declaration):
         raise HTTPException(status_code=res["status_code"], detail=res["detail"])
     return res
@@ -41,7 +42,7 @@ async def get_declaration(
     token: Annotated[schemas.TokenData, Depends(is_user_logged_in)],
     db: Session = Depends(get_db),
 ):
-    declaration = crud.declarations.get_declaration(db, id)
+    declaration = crud.get_declaration(db, id)
     if not declaration:
         raise HTTPException(status_code=404, detail="Wrong ID or wrong TIN")
     return declaration
@@ -52,7 +53,7 @@ async def get_declarations_person(
     token: Annotated[schemas.TokenData, Depends(is_user_logged_in)],
     db: Session = Depends(get_db),
 ):
-    return crud.declarations.get_person_declarations(db, token.tin)
+    return crud.get_person_declarations(db, token.tin)
 
 
 @router.get("/role/{role}", response_model=list[schemas.DeclarationBase])
@@ -68,7 +69,7 @@ async def accept_declaration(
     token: Annotated[schemas.TokenData, Depends(is_user_logged_in)],
     db: Session = Depends(get_db),
 ):
-    res = crud.declarations.update_declaration_acceptance(db, id, token.tin)
+    res = crud.update_declaration_acceptance(db, id, token.tin)
     if not isinstance(res, Declaration):
         raise HTTPException(status_code=res["status_code"], detail=res["detail"])
     return res
@@ -81,7 +82,7 @@ async def complete_declaration(
     data: schemas.DeclarationCompletion,
     db: Session = Depends(get_db),
 ):
-    res = crud.declarations.update_declaration_completion(db, id, token.tin, data)
+    res = crud.update_declaration_completion(db, id, token.tin, data)
     if not isinstance(res, (Declaration)):
         raise HTTPException(status_code=res["status_code"], detail=res["detail"])
     return res

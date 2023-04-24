@@ -3,7 +3,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
 from .db.database import SessionLocal, engine
-from .db import crud, models
+from app import crud, models
 
 from . import schemas, utils
 

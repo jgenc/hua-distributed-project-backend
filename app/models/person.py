@@ -2,7 +2,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Enum
 from sqlalchemy.orm import relationship, Mapped
 from typing import List, FrozenSet
 
-from ..database import Base
+from ..db.database import Base
 
 # I do not import Declaration again, as it will be a cyclical import and that 
 # would make no sense. However, pylance will be a bitch about it.

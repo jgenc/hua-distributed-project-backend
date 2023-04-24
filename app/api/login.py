@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from ..dependencies import get_db, crud, utils, models, schemas
 
 router = APIRouter(prefix="/api/auth/login", tags=["auth"])
+crud = crud.Auth()
 
 
 @router.post("", response_model=schemas.Token)
@@ -13,7 +14,7 @@ async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db),
 ):
-    db_user = crud.auth.auth_user(db, form_data.username, form_data.password)
+    db_user = crud.auth_user(db, form_data.username, form_data.password)
     if not db_user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

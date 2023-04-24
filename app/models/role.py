@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 import enum
 from typing import List, FrozenSet
 
-from ..database import Base
+from ..db.database import Base
 
 class RoleEnum(str, enum.Enum):
     ROLE_CITIZEN = "ROLE_CITIZEN"

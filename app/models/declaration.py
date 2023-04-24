@@ -2,7 +2,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Enum
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 import enum
 
-from ..database import Base
+from ..db.database import Base
 from .person import Person
 
 
