@@ -1,8 +1,29 @@
-#!/bin/bash
-docker run --rm \
-	--name fastapi \
-	-e POSTGRES_PASSWORD=dev \
-  --net=host \
+#!/bin/sh
+
+mode=$1
+container=fastapi
+password=dev
+
+if [[ $mode == "start" ]]; then
+	docker run --rm \
+	--name $container \
+	-e POSTGRES_PASSWORD=$password \
+	--net=host \
 	-e PGDATA=/data \
-	-v fastapi-data:/data \
+	-v $container-data:/data \
 	-d postgres
+
+	sleep 4
+	psql -h localhost -U postgres -c "CREATE DATABASE db;"
+elif [[ $mode == "ps" ]]; then
+	exec docker ps
+elif [[ $mode == "reload" ]] then
+	exec docker kill $container
+	exec docker volume rm $container-data
+elif [[ $mode == "stop" ]]; then
+	exec docker kill $container 
+elif [[ $mode == "dvol" ]]; then
+	exec docker volume rm $container-data 
+else
+	echo -e "Options:\n\tstart:\tstarts postgres docker container\n\tps:\tshows current running processes\n\treload: stops and deletes volume\n\tstop:\tstops $container\n\tdvol:\tdeletes volume"
+fi
