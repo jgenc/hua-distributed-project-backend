@@ -21,7 +21,10 @@ def get_db():
 
 
 async def is_user_logged_in(token: Annotated[str, Depends(oauth2_scheme)]):
-    return utils.token.get_token(token)
+    token_data: utils.token.TokenData | None = utils.token.get_token(token)
+    if not token_data:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED)
+    return token_data
 
 
 async def is_simple_user(

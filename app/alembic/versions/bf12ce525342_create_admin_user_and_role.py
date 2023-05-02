@@ -13,8 +13,8 @@ from dotenv import get_key
 
 ADMIN_USERNAME = get_key("../.env", "ADMIN_USERNAME")
 ADMIN_PASSWORD = get_key("../.env", "ADMIN_PASSWORD")
-ADMIN_TIN = 0
-ADMIN_ID = 0
+ADMIN_TIN = get_key("../.env", "ADMIN_TIN")
+ADMIN_ID = get_key("../.env", "ADMIN_ID")
 
 # revision identifiers, used by Alembic.
 revision = "bf12ce525342"

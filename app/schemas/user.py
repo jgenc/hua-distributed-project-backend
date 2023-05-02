@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from pydantic.generics import GenericModel
 from .role import Role, RoleEnum
+from typing import Any
 
 tin_field = Field(min_length=9, max_length=9)
 username_field = Field(min_length=4, max_length=20)
@@ -19,16 +20,19 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    role: Role
+    role: RoleEnum
 
     class Config:
         orm_mode = True
+
+class UserPassword(BaseModel):
+    password: str = password_field
 
 
 class UserUpdate(BaseModel):
     tin: str | None = tin_field
     username: str | None = username_field
-    role: RoleEnum | None = None
+    role: RoleEnum | None
 
 
 class UserLogin(BaseModel):
