@@ -28,15 +28,20 @@ services:
   # TODO: Look at Traefik 
   # TODO: https://fastapi.tiangolo.com/deployment/docker/#behind-a-tls-termination-proxy
   proxy:
-    image: nginx:latest
-    volumes:
-      - ./assets/nginx/nginx.http.config:/etc/nginx/nginx.conf
-    #   #- ./assets/nginx/certs:/etc/nginx/certs
-    #   - static_volume:/app/static
+    # This is currently broken, but my desktop runs it normally. Why?
+    # image: nginx:stable
+    # volumes:
+    #   - ./assets/nginx/nginx.http.config:/etc/nginx/nginx.conf
+    build:
+      context: .
+      dockerfile: proxy.dockerfile
     ports:
       - "80:80"
     depends_on:
-      - backend
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_started
     restart: on-failure:5
 
   backend-migrate:

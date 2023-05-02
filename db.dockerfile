@@ -1,0 +1,4 @@
+FROM postgres:15
+
+ENV POSTGRES_PASSWORD=dev
+ENV PGDATA=/data
