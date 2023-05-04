@@ -1,5 +1,5 @@
 from sqlalchemy import update
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, subqueryload
 from app import models, schemas
 from app.crud import persons
 
@@ -11,9 +11,9 @@ class Declarations:
     }
 
     IS_DECLARATION_RELEVANT = lambda tin: (
-        models.Declaration.notary_tin == tin
-        or models.Declaration.purchaser_tin == tin
-        or models.Declaration.seller_tin == tin
+        (models.Declaration.notary_tin == tin)
+        | (models.Declaration.purchaser_tin == tin)
+        | (models.Declaration.seller_tin == tin)
     )
 
     def get_declaration(self, db: Session, id: int):
