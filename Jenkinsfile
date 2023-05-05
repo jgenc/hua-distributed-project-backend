@@ -50,7 +50,7 @@ pipeline {
           '''
 
           sh '''
-            ansible-playook -i ~/workspace/ansible-project/hosts.yml -l deploy-vm-1 ~/workspace/ansible-example/playbooks/fastapi-install.yaml  
+            ansible-playbook -i ~/workspace/ansible-project/hosts.yml -l deploy-vm-1 ~/workspace/ansible-example/playbooks/fastapi-install.yaml  
           '''
         }
       }
