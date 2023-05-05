@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from ..dependencies import get_db, crud, utils, models, schemas
+from ..dependencies import get_db, crud, utils, models, schemas, is_user_logged_in
 
 router = APIRouter(prefix="/api/auth/login", tags=["auth"])
 
@@ -28,3 +28,12 @@ async def login(
     )
     token = utils.token.create_access_token(token_data.dict())
     return schemas.Token(access_token=token, token_type="bearer")
+
+
+@router.get("/refresh", response_model=schemas.Token)
+async def refresh(
+    token: Annotated[schemas.TokenData, Depends(is_user_logged_in)]
+):
+    refreshed_token = utils.token.create_access_token(token.dict())
+    print("New Token: ", refreshed_token)
+    return schemas.Token(access_token=refreshed_token, token_type="bearer") 
