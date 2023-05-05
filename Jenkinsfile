@@ -42,5 +42,18 @@ pipeline {
         }
       }
 
+      stage("Deploy container to Target VM") {
+        steps {
+          sh '''
+            ansible-galaxy install geerlingguy.docker
+            ansible-galaxy install geerlingguy.pip
+          '''
+
+          sh '''
+            ansible-playook -i ~/workspace/ansible-project/hosts.yml -l deploy-vm-1 ~/workspace/ansible-example/playbooks/fastapi-install.yaml  
+          '''
+        }
+      }
+
   }
 }
