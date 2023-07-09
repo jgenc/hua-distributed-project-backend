@@ -4,7 +4,7 @@ WORKDIR /server
 COPY ./requirements.txt ./
 RUN pip install -r requirements.txt
 
-COPY ./.env.example ./.env
+COPY ./.env ./.env
 COPY ./app/ ./app
 
 EXPOSE 8000/tcp
