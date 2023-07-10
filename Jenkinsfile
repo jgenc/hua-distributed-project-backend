@@ -15,6 +15,14 @@ pipeline {
         }
       }
 
+      stage("Copy .env.example to .env") {
+        steps {
+          sh '''
+            cp ./.env.example ./.env
+          '''
+        }
+      }
+
       stage("Docker Build") {
         steps {
           sh '''
