@@ -45,7 +45,7 @@ pipeline {
       stage("Deploy container to Target VM") {
         steps {
           sh '''
-            ansible-playbook -i ~/workspace/devops-project/hosts/azure.yml ~/workspace/devops-project/playbooks/backend-docker.yml
+            ansible-playbook -i ~/workspace/devops-project/hosts/azure.yml ~/workspace/devops-project/playbooks/backend-docker-jenkins.yml
           '''
         }
       }
