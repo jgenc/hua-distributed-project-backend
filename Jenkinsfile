@@ -33,14 +33,6 @@ pipeline {
         }
       }
       
-      // stage("Test Docker container") {
-      //   steps {
-      //     sh '''
-
-      //     '''
-      //   }
-      // }
-
       stage("Docker Push") {
         steps {
           sh '''
@@ -53,13 +45,12 @@ pipeline {
       stage("Deploy container to Target VM") {
         steps {
           sh '''
-            ansible-galaxy install geerlingguy.docker
-            ansible-galaxy install geerlingguy.pip
+            ansible-playbook -i ~/workspace/devops-project/hosts/azure.yml -l deploy-vm-1 ~/workspace/devops-project/playbooks/backend-vm.yml
           '''
 
-          sh '''
-            ansible-playbook -i ~/workspace/ansible-project/hosts.yml -l deploy-vm-1 ~/workspace/ansible-project/playbooks/fastapi-install.yaml  
-          '''
+          // sh '''
+          //   ansible-playbook -i ~/workspace/ansible-project/hosts.yml -l deploy-vm-1 ~/workspace/ansible-project/playbooks/fastapi-install.yaml  
+          // '''
         }
       }
 
