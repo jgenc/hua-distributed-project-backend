@@ -2,15 +2,19 @@ from sqlalchemy import update, select
 from sqlalchemy.orm import Session, subqueryload
 
 from app import models, schemas, utils
+from .persons import persons
 
 
 class Users:
-    def __user_serializer(self, user: models.User):
+    def __user_serializer(self, user: models.User, db: Session):
+        account_exists = persons.read_person(db, user.tin) is not None
+        print(f"user.tin is {user.tin} and account_exists is {account_exists}")
         return {
             "id": user.id,
             "tin": user.tin,
             "username": user.username,
             "role": user.role.name,
+            "account": account_exists,
         }
 
     def read_user(self, db: Session, user_tin: str):
@@ -29,8 +33,8 @@ class Users:
             .execution_options(populate_existing=True)
         )
         response = db.execute(query).scalars().all()
-        serialized_response = [self.__user_serializer(user) for user in response]
-        return serialized_response 
+        serialized_response = [self.__user_serializer(user, db) for user in response]
+        return serialized_response
 
     def read_role(self, db: Session, user_id: int):
         return db.query(models.Role).filter(models.Role.id == user_id).first()
@@ -50,7 +54,7 @@ class Users:
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
-        return self.__user_serializer(db_user)
+        return self.__user_serializer(db_user, db)
 
     # Here I get an object of model User because I already called the database
     # to check if a user exists. If everything is okay, just delete the user

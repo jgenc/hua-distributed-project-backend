@@ -38,7 +38,7 @@ async def read_all_persons(db: Session = Depends(get_db)):
     return crud.persons.read_all_persons(db)
 
 
-@router.get("/{tin}", response_model=schemas.Person)
+@router.get("/{tin}", response_model=schemas.Person | None)
 async def read_person(
     tin: str,
     token_data: Annotated[schemas.TokenData, Depends(is_user_logged_in)],

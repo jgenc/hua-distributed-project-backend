@@ -1,8 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 mode=$1
 container=fastapi
 password=dev
+seconds_to_wait=$2
+
+if ! [[ $seconds_to_wait =~ '^[0-9]+$' ]]; then
+    seconds_to_wait=5
+fi
 
 if [[ $mode == "start" ]]; then
 	docker run --rm \
@@ -13,17 +18,24 @@ if [[ $mode == "start" ]]; then
 	-v $container-data:/data \
 	-d postgres
 
-	sleep 4
+	sleep $seconds_to_wait
 	psql -h localhost -U postgres -c "CREATE DATABASE db;"
+	psql -h localhost -U postgres -c "CREATE USER dev WITH PASSWORD 'dev';"
+
+	psql -h localhost -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE db TO dev;"
+	psql -h localhost -U postgres -d db -c "GRANT ALL ON SCHEMA public TO dev;"
 elif [[ $mode == "ps" ]]; then
 	exec docker ps
-elif [[ $mode == "reload" ]] then
+elif [[ $mode == "reload" ]]; then
 	exec docker kill $container
 	exec docker volume rm $container-data
 elif [[ $mode == "stop" ]]; then
 	exec docker kill $container 
 elif [[ $mode == "dvol" ]]; then
 	exec docker volume rm $container-data 
+elif [[ $mode == "migrate" ]]; then
+	cd app
+	alembic upgrade head
 else
 	echo -e "Options:\n\tstart:\tstarts postgres docker container\n\tps:\tshows current running processes\n\treload: stops and deletes volume\n\tstop:\tstops $container\n\tdvol:\tdeletes volume"
 fi

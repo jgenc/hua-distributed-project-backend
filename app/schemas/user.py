@@ -21,9 +21,11 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
     role: RoleEnum
+    account: bool
 
     class Config:
         orm_mode = True
+
 
 class UserPassword(BaseModel):
     password: str = password_field

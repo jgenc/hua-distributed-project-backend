@@ -22,9 +22,9 @@ class DeclarationCreate(BaseModel):
     property_description: str = Field(min_length=5, max_length=100)
     tax: float = Field(min_size=0, max_size=1_000_000)
 
+
 class DeclarationBase(BaseModel):
     id: int
-    # notary_tin: str = tin_field
 
     notary: Person
     seller: Person
@@ -37,7 +37,6 @@ class DeclarationBase(BaseModel):
     # TODO: Create an enum for this field. Both schemas and models.
     payment_method: str | None
 
-
     property_number: str = Field(min_length=5, max_length=10)
     property_description: str = Field(min_length=5, max_length=100)
     tax: float = Field(min_size=0, max_size=1_000_000)
@@ -45,20 +44,6 @@ class DeclarationBase(BaseModel):
     class Config:
         use_enum_values = True
         orm_mode = True
-
-# class DeclarationBase(DeclarationCreate):
-#     id: int
-#     notary_tin: str = tin_field
-#     status: StatusEnum
-#     seller_acceptance: bool
-#     purchaser_acceptance: bool
-#     contract_details: str | None
-#     # TODO: Create an enum for this field. Both schemas and models.
-#     payment_method: str | None
-
-#     class Config:
-#         use_enum_values = True
-#         orm_mode = True
 
 
 class DeclarationCompletion(BaseModel):
