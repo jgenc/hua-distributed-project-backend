@@ -1,3 +1,12 @@
+# ⚠️ Archived project
+
+> **This repository has been archived and is no longer maintained.**
+>
+> This was a university project from Semester 5 (Distributed Systems course) and is being preserved for reference purposes only. Dependencies are outdated and there is no intention to resolve security vulnerabilities or update packages.
+>
+
+---
+
 # hua-distributed-project-backend
 
 This is a repository used for the Distributed Systems course project and for the
